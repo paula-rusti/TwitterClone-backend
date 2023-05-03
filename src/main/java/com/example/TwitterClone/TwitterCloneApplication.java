@@ -4,6 +4,7 @@ import com.example.TwitterClone.models.ApplicationUser;
 import com.example.TwitterClone.models.Role;
 import com.example.TwitterClone.repositories.RoleRepository;
 import com.example.TwitterClone.repositories.UserRepository;
+import com.example.TwitterClone.services.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,17 +28,15 @@ public class TwitterCloneApplication {
 	}
 
 	@Bean
-	public CommandLineRunner run(RoleRepository roleRepo, UserRepository userRepo) {
+	public CommandLineRunner run(RoleRepository roleRepo, UserService userService) {
 		return args -> {
-			// just to see that crup operations provided by jpa interface work
-//			roleRepo.save(new Role(1, "USER"));
-//			ApplicationUser u = new ApplicationUser();
-//			u.setFirstName("paula");
-//			u.setLastName("rusti");
-//			HashSet<Role> roles = new HashSet<>();
-//			roles.add(roleRepo.findRoleByAuthority("USER").get());
-//			u.setAuthorities(roles);
-//			userRepo.save(u);
+			roleRepo.save(new Role(1, "USER"));
+			ApplicationUser u = new ApplicationUser();
+
+			u.setFirstName("Denis");
+			u.setLastName("Nutiu");
+
+			userService.registerUser(u);
 		};
 	}
 
