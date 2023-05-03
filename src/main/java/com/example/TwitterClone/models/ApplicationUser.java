@@ -12,7 +12,7 @@ public class ApplicationUser {
     // not named User to avoid conflict with Spring security
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Integer userId;
 
