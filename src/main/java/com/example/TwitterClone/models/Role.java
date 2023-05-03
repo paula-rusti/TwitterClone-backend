@@ -11,4 +11,35 @@ public class Role {
     private Integer roleId;
 
     private String authority;
+
+    public Role(Integer roleId, String authority) {
+        this.roleId = roleId;
+        this.authority = authority;
+    }
+
+    public Role() { }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
+    }
+
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "roleId=" + roleId +
+                ", authority='" + authority + '\'' +
+                '}';
+    }
 }
