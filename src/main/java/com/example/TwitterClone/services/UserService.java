@@ -23,7 +23,7 @@ public class UserService {
 
     public ApplicationUser registerUser(ApplicationUser user) {
         Set<Role> roleSet = user.getAuthorities();
-        roleSet.add(roleRepository.findRoleByAuthority("USER").get());
+        roleSet.add(roleRepository.findByAuthority("USER").get());
         user.setAuthorities(roleSet);
 
         return userRepository.save(user);
