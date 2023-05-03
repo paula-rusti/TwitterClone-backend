@@ -51,6 +51,29 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>1.5.5.Final</version>
+		</dependency>
+
+<!--		swagger dependency-->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.7.0</version>
+		</dependency>
+
+<!--		hibernate validator-->
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>8.0.0.Final</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
