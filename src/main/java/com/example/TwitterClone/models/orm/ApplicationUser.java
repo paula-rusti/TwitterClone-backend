@@ -1,4 +1,4 @@
-package com.example.TwitterClone.models;
+package com.example.TwitterClone.models.orm;
 
 import jakarta.persistence.*;
 import net.minidev.json.annotate.JsonIgnore;
