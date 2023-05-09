@@ -18,11 +18,6 @@ public class TwitterCloneApplication {
 		SpringApplication.run(TwitterCloneApplication.class, args);
 	}
 
-	@GetMapping("/hello")
-	public String hello() {
-		return "Hello and welcome on Twitter!";
-	}
-
 	@Bean
 	public CommandLineRunner run(RoleRepository roleRepo, UserService userService) {
 		return args -> {
