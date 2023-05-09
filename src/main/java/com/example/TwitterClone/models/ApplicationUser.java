@@ -31,17 +31,16 @@ public class ApplicationUser {
     @JsonIgnore // don't send this back and forth over http
     private String password_digest;
 
-    // one user can have multiple role and each role cand be possesed by multple users
-    @ManyToMany(fetch = FetchType.EAGER)    // fetch the users role every time we get a user
-    @JoinTable(
-        name="user_role_junction",
-        joinColumns = {@JoinColumn(name = "user_id")},
-        inverseJoinColumns = {@JoinColumn(name = "role_id")}
-    )
-    private Set<Role> authorities;
 
     public ApplicationUser() {
-        this.authorities = new HashSet<>();
+    }
+
+    public ApplicationUser(String firstName, String lastName, String email, String username, String password_digest) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.username = username;
+        this.password_digest = password_digest;
     }
 
     public Integer getUserId() {
@@ -92,14 +91,6 @@ public class ApplicationUser {
         this.password_digest = password_digest;
     }
 
-    public Set<Role> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(Set<Role> authorities) {
-        this.authorities = authorities;
-    }
-
     @Override
     public String toString() {
         return "ApplicationUser{" +
@@ -109,7 +100,6 @@ public class ApplicationUser {
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", password_digest='" + password_digest + '\'' +
-                ", authorities=" + authorities +
                 '}';
     }
 }
