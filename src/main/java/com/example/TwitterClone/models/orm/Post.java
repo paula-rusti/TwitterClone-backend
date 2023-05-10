@@ -1,8 +1,9 @@
-package com.example.TwitterClone.models;
+package com.example.TwitterClone.models.orm;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "posts")
+@Getter
 public class Post {
     @Id
     @Column(name = "post_id")
@@ -18,12 +20,13 @@ public class Post {
 
     @JsonBackReference(value = "post")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_username", referencedColumnName = "username")
+    @JoinColumn(name = "owner_username_join", referencedColumnName = "username")
     private ApplicationUser owner;
 
     @Column(name = "content", nullable = false)
     private String content;
 
+    // TODO run function serverside to get the timestamp of db insertion
     @Column(name = "created", nullable = false)
     @CreatedDate
     private Date created;
@@ -32,4 +35,13 @@ public class Post {
     @JsonManagedReference(value = "postReactions")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Reaction> postReactions;
+
+    public Post(String content, Date created) {
+        this.content = content;
+        this.created = created;
+    }
+
+    public Post() {
+
+    }
 }

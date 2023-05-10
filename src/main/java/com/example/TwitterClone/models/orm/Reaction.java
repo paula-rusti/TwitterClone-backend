@@ -1,5 +1,6 @@
-package com.example.TwitterClone.models;
+package com.example.TwitterClone.models.orm;
 
+import com.example.TwitterClone.models.orm.Post;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 

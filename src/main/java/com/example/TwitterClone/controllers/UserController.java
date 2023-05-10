@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+// todo add get user by id
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
