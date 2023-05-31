@@ -18,6 +18,9 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "owner_id", nullable = false)
+    private Long ownerId;
+
     @JsonBackReference(value = "post")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_username_join", referencedColumnName = "username")
@@ -26,7 +29,7 @@ public class Post {
     @Column(name = "content", nullable = false)
     private String content;
 
-    // TODO run function serverside to get the timestamp of db insertion
+    // TODO audit column
     @Column(name = "created", nullable = false)
     @CreatedDate
     private Date created;

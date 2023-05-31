@@ -45,22 +45,17 @@ public class PostController {
         return ResponseEntity.ok(retrievedPost.orElse(null));
     }
 
-    // Get a user's own posts - maybe use query param?
     @GetMapping("/users/{userId}")
     public ResponseEntity<List<PostResponse>> getUserPosts(@PathVariable Long userId) {
-//        List<PostDto> posts = postService.getUserPosts(userId);
-//        return ResponseEntity.ok(posts);
-        System.out.println("not yet impl");
-        return null;
+        List<PostResponse> posts = postService.getUserPosts(userId);
+        return ResponseEntity.ok(posts);
     }
 
     // Get a user's feed
     @GetMapping("/users/{userId}/feed")
     public ResponseEntity<List<PostResponse>> getUserFeed(@PathVariable Long userId) {
-//        List<PostDto> posts = postService.getUserFeed(userId);
-//        return ResponseEntity.ok(posts);
-        System.out.println("not yet impl");
-        return null;
+        List<PostResponse> posts = postService.getUserFeed(userId);
+        return ResponseEntity.ok(posts);
     }
 
     // Add a reaction to a post
