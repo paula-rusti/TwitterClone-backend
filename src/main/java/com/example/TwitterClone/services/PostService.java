@@ -2,11 +2,14 @@ package com.example.TwitterClone.services;
 
 import com.example.TwitterClone.mappers.PostMapper;
 import com.example.TwitterClone.models.dto.request.CreatePostRequest;
+import com.example.TwitterClone.models.dto.request.CreateReactionRequest;
 import com.example.TwitterClone.models.dto.response.PostResponse;
 import com.example.TwitterClone.models.orm.Follow;
 import com.example.TwitterClone.models.orm.Post;
+import com.example.TwitterClone.models.orm.Reaction;
 import com.example.TwitterClone.repositories.FollowRepository;
 import com.example.TwitterClone.repositories.PostRepository;
+import com.example.TwitterClone.repositories.ReactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +24,14 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final ReactionRepository reactionRepository;
     private final FollowRepository followRepository;
     private final PostMapper postMapper;
 
     @Autowired
-    public PostService(PostRepository postRepository, PostMapper postMapper, FollowRepository followRepository) {
+    public PostService(PostRepository postRepository, ReactionRepository reactionRepository, PostMapper postMapper, FollowRepository followRepository) {
         this.postRepository = postRepository;
+        this.reactionRepository = reactionRepository;
         this.followRepository = followRepository;
         this.postMapper = postMapper;
     }
@@ -61,5 +66,10 @@ public class PostService {
         }
         return retrievedPosts.stream().map(postMapper::entityToPostResponse).toList();
 
+    }
+
+    public CreateReactionRequest addReaction(CreateReactionRequest createReactionRequest) {
+        Reaction addedReaction = reactionRepository.save(postMapper.reactionRequestToEntity(createReactionRequest));
+        return postMapper.reactionEntityToReactionRequest(addedReaction);
     }
 }

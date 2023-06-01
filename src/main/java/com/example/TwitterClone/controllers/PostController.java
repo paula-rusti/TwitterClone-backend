@@ -59,14 +59,14 @@ public class PostController {
     }
 
     // Add a reaction to a post
+    // todo change return type to reaction response
     @PostMapping("/{postId}/reactions")
-    public ResponseEntity<ReactionResponse> addReaction(@PathVariable Long postId,
+    public ResponseEntity<CreateReactionRequest> addReaction(@PathVariable Long postId,
                                                         @Valid @RequestBody CreateReactionRequest request) {
-//        ReactionDto reactionDto = postService.addReaction(postId, request);
-//        return ResponseEntity.created(URI.create("/api/v1/posts/" + postId + "/reactions/" + reactionDto.getId()))
-//                .body(reactionDto);
-        System.out.println("not yet impl");
-        return null;
+        CreateReactionRequest reactionRequest = postService.addReaction(request);
+        return ResponseEntity.created(URI.create("/api/v1/posts/" + postId + "/reactions/" + reactionRequest.getPostId()))
+                .body(reactionRequest);
+
     }
 
     // Add a reply to a post
