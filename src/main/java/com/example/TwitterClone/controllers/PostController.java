@@ -4,10 +4,10 @@ import com.example.TwitterClone.models.dto.request.CreatePostRequest;
 import com.example.TwitterClone.models.dto.request.CreateReactionRequest;
 import com.example.TwitterClone.models.dto.request.CreateReplyRequest;
 import com.example.TwitterClone.models.dto.response.PostResponse;
-import com.example.TwitterClone.models.dto.response.ReactionResponse;
 import com.example.TwitterClone.models.dto.response.ReplyResponse;
 import com.example.TwitterClone.models.orm.Post;
 import com.example.TwitterClone.services.PostService;
+import com.example.TwitterClone.services.ReplyService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +26,12 @@ public class PostController {
 
     private final PostService postService;
 
+    private final ReplyService replyService;
+
     @Autowired
-    public PostController(PostService postService) {
+    public PostController(PostService postService, ReplyService replyService) {
         this.postService = postService;
+        this.replyService = replyService;
     }
 
     // Add a post
@@ -73,11 +76,8 @@ public class PostController {
     @PostMapping("/{postId}/replies")
     public ResponseEntity<ReplyResponse> addReply(@PathVariable Long postId,
                                                   @Valid @RequestBody CreateReplyRequest request) {
-//        ReplyDto replyDto = postService.addReply(postId, request);
-//        return ResponseEntity.created(URI.create("/api/v1/posts/" + postId + "/replies/" + replyDto.getId()))
-//                .body(replyDto));
-        System.out.println("not yet impl");
-        return null;
-
+        // postId is only used for the URI
+        ReplyResponse replyDto = replyService.addReply(request);
+        return ResponseEntity.created(URI.create("/api/v1/posts/" + postId + "/replies/" + replyDto.getId())).body(replyDto);
     }
 }
