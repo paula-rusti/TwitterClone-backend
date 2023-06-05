@@ -49,21 +49,21 @@ public class UserController {
 
     // Search for users by username
     @GetMapping("/")
-    public ResponseEntity<List<ApplicationUser>> searchUsers(@RequestParam String username, @RequestParam String firstName, @RequestParam String lastName) {
+    public ResponseEntity<List<ApplicationUser>> searchUsers(@RequestParam Optional<String> username, @RequestParam Optional<String> firstName, @RequestParam Optional<String> lastName) {
         // only one query param active(provided at a time)
         List<ApplicationUser> users = new ArrayList<>();
 
-        if (username != null) {
-            Optional<ApplicationUser> user = userService.searchUsersByUsername(username);
+        if (username.isPresent()) {
+            Optional<ApplicationUser> user = userService.searchUsersByUsername(username.get());
             users.add(user.orElse(null));
         }
 
-        if (firstName != null) {
-            users = userService.searchUsersByFirstName(firstName).orElse(Collections.emptyList());
+        if (firstName.isPresent()) {
+            users = userService.searchUsersByFirstName(firstName.get()).orElse(Collections.emptyList());
         }
 
-        if (lastName != null) {
-            users = userService.searchUsersByLastName(lastName).orElse(Collections.emptyList());
+        if (lastName.isPresent()) {
+            users = userService.searchUsersByLastName(lastName.get()).orElse(Collections.emptyList());
         }
 
         return ResponseEntity.ok(users);

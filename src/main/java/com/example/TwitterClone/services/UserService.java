@@ -40,7 +40,7 @@ public class UserService {
     }
 
     public Optional<List<ApplicationUser>> searchUsersByLastName(String lastName) {
-        return userRepository.findByFirstName(lastName);
+        return userRepository.findByLastName(lastName);
     }
 
     public Boolean existsByUsername(String username) {
