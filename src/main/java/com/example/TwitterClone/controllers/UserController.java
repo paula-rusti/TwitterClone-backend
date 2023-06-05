@@ -1,5 +1,6 @@
 package com.example.TwitterClone.controllers;
 
+import com.example.TwitterClone.models.dto.response.FollowResponse;
 import com.example.TwitterClone.models.orm.ApplicationUser;
 import com.example.TwitterClone.models.dto.request.FollowRequest;
 import com.example.TwitterClone.models.dto.request.RegistrationRequest;
@@ -42,9 +43,8 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists");
         }
         // Save the new user
-        ApplicationUser registeredUser = userService.registerUser(new ApplicationUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getUsername(), user.getPassword())); // tweak constructor
+        ApplicationUser registeredUser = userService.registerUser(user);
         return ResponseEntity.created(URI.create("/api/v1/users/" + registeredUser.getUserId())).body(registeredUser);
-        // todo add exceptions and controller advice
     }
 
     // Search for users by username
@@ -72,20 +72,24 @@ public class UserController {
     // Follow a user
     @PostMapping("/{username}/followers")
     public ResponseEntity<Void> followUser(@PathVariable String username, @RequestBody FollowRequest followRequest) {
-        // use userRepo to get id from username
-        Integer userId = userService.searchUsersByUsername(username).orElse(null).getUserId();
+        // todo eventually second check the username with the id from request
 
-        followService.followUser(Long.valueOf(userId), followRequest);
-        return ResponseEntity.noContent().build();
+        FollowResponse followResponse = followService.followUser(followRequest);
+        return ResponseEntity.created(URI.create("/api/v1/users/" + username + "/followers/" + followResponse.getFollowerId())).build();
     }
 
     // Unfollow a user
     @DeleteMapping("/{username}/followers")
     public ResponseEntity<Void> unfollowUser(@PathVariable String username, @RequestBody FollowRequest unfollowRequest) {
-        // use userRepo to get id from username
-        Integer userId = userService.searchUsersByUsername(username).orElse(null).getUserId();
+        // todo make sure we get notified when this fails
+        followService.unfollowUser(unfollowRequest);
+        return ResponseEntity.noContent().build();
+    }
 
-        followService.unfollowUser(Long.valueOf(userId), unfollowRequest);
+    @DeleteMapping("/{username}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String username) {
+        // todo make sure we get notified when this fails -- by using deleted
+        Boolean deleted = userService.deleteUser(username);
         return ResponseEntity.noContent().build();
     }
 }
