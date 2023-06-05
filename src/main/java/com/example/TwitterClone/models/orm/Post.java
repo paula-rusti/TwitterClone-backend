@@ -5,8 +5,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -20,8 +23,8 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "owner_id", nullable = false)
-    private Long ownerId;
+//    @Column(name = "owner_id", nullable = false)
+//    private Long ownerId;
 
 //    @JsonBackReference(value = "post")
 //    @ManyToOne(fetch = FetchType.LAZY)
@@ -30,16 +33,15 @@ public class Post {
 
     @JsonBackReference(value = "User posts")
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "owner_id_join", referencedColumnName = "user_id", nullable = false)
+    @JoinColumn(name = "owner_id", referencedColumnName = "user_id", nullable = false)
     private ApplicationUser owner;
 
     @Column(name = "content", nullable = false)
     private String content;
 
-    // TODO audit column
+    @CreationTimestamp
     @Column(name = "created", nullable = false)
-    @CreatedDate
-    private Date created;
+    private LocalDateTime created;
 
 
     @JsonManagedReference(value = "post reactions")
@@ -61,9 +63,8 @@ public class Post {
     @Column(name = "retweets", nullable = true)
     private List<Long> retweets;
 
-    public Post(String content, Date created) {
+    public Post(String content) {
         this.content = content;
-        this.created = created;
     }
 
     public Post() {

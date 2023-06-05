@@ -19,9 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class PostService {
@@ -42,10 +45,24 @@ public class PostService {
         this.userRepository = userRepository;
     }
 
+    private List<String> extractMentions(String content) {
+        String regex = "@([a-zA-Z0-9_]+)";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(content);
+
+        List<String> mentions = new ArrayList<>();
+
+        while (matcher.find()) {
+            String username = matcher.group(1);
+            mentions.add(username);
+        }
+        return mentions;
+    }
+
     public Post addPost(CreatePostRequest createPostRequest) {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        return postRepository.save(new Post(createPostRequest.getContent(), Date.from(Instant.from(now)) ));
+        List<String> mentions = extractMentions(createPostRequest.getContent());
+        createPostRequest.setMentions(mentions);
+        return postRepository.save(postMapper.postRequestToEntity(createPostRequest));
     }
 
     public Optional<Post> getPost(Long id) {
@@ -54,7 +71,7 @@ public class PostService {
 
     public List<PostResponse> getUserPosts(Long userId) {
         // retrieve all posts owned by the given user
-        List<Post> retrievedPosts = postRepository.findAllByOwnerId(userId);
+        List<Post> retrievedPosts = postRepository.findAllByOwner_UserId(userId);
         return retrievedPosts.stream().map(postMapper::entityToPostResponse).toList();
     }
 
@@ -74,7 +91,7 @@ public class PostService {
         List<Long> followingIds = following.stream().map(Follow::getFollowedId).toList();
         List<Post> retrievedPosts = List.of();
         for (Long followingId : followingIds) {
-            retrievedPosts.addAll(postRepository.findAllByOwnerId(followingId));
+            retrievedPosts.addAll(postRepository.findAllByOwner_UserId(followingId));
         }
         return retrievedPosts.stream().map(postMapper::entityToPostResponse).toList();
 
@@ -99,8 +116,8 @@ public class PostService {
         Optional<Post> post = postRepository.findById(repostRequest.getPostId());
         if (post.isPresent()) {
             // create a new post belonging to the reposter
-            Post repost = new Post(post.get().getContent(), Date.from(Instant.now()));
-            repost.setOwnerId(repostRequest.getUserId());
+            Post repost = new Post(post.get().getContent());
+            repost.getOwner().setUserId(Math.toIntExact(repostRequest.getUserId()));
             Post repostedPost = postRepository.save(repost);
 
             // update the retweets count of the original post
