@@ -1,22 +1,22 @@
+
 package com.example.TwitterClone.models.orm;
 
+import com.example.TwitterClone.utils.StringListConverter;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.cglib.core.Local;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "posts")
 @Getter
 @Setter
+@Converter(autoApply = true)
 public class Post {
     @Id
     @Column(name = "post_id")
@@ -55,8 +55,13 @@ public class Post {
     // valid list of existing usernames
     // when the post is added its content is checked for mentions with @username
     // then this field is populated
-    @ElementCollection
-    @Column(name = "mentions", nullable = true)
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @CollectionTable(name = "posts", joinColumns = @JoinColumn(name = "post_id"))
+//    @Column(name = "mentions", columnDefinition = "text[]", nullable = true)
+//    private List<String> mentions;
+
+    @Convert(converter = StringListConverter.class)
+    @Column(name = "mentions")
     private List<String> mentions;
 
     @ElementCollection

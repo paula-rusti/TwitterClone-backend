@@ -14,6 +14,7 @@ public interface PostMapper {
     PostResponse entityToPostResponse(Post post);
 
     @Mapping(source = "ownerId", target = "owner.userId")
+    @Mapping(source = "mentions", target = "mentions")
     Post postRequestToEntity(CreatePostRequest request);
 
     Reaction reactionRequestToEntity(CreateReactionRequest request);
