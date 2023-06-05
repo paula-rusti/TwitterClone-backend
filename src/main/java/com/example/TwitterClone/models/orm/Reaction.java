@@ -1,6 +1,5 @@
 package com.example.TwitterClone.models.orm;
 
-import com.example.TwitterClone.models.orm.Post;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
@@ -14,7 +13,7 @@ public class Reaction {
     @JoinColumn(name = "post_id", nullable = false)
     @JsonBackReference(value = "postReactions")
     @ManyToOne(fetch = FetchType.LAZY)
-    Post post;
+    Post parentPost;
 
 //    @JoinColumn(name = "user_id", nullable = false)
 //    @ManyToOne(fetch = FetchType.LAZY)
