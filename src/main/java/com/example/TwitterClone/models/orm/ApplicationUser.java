@@ -1,11 +1,19 @@
 package com.example.TwitterClone.models.orm;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import net.minidev.json.annotate.JsonIgnore;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+@Setter
+@Getter
+@AllArgsConstructor
 @Entity
 @Table(name="users")
 public class ApplicationUser {
@@ -28,67 +36,30 @@ public class ApplicationUser {
     @Column(name = "username", unique = true)
     private String username;
 
-    @JsonIgnore // don't send this back and forth over http
+    @JsonIgnore // we don't hash it for now
     private String password_digest;
 
+    @JsonManagedReference(value = "User posts")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner", cascade = CascadeType.REMOVE)
+    private List<Post> posts;
+
+    @JsonManagedReference (value = "User followers")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "followerUser", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Follow> follows;
+
+    @JsonManagedReference (value = "Followed users")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "followedUser", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Follow> followers;
+
+    @JsonManagedReference (value = "User reactions")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Reaction> reactedPosts;
+
+    @JsonManagedReference (value = "User replies")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Reply> replies;
 
     public ApplicationUser() {
-    }
-
-    public ApplicationUser(String firstName, String lastName, String email, String username, String password_digest) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.username = username;
-        this.password_digest = password_digest;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword_digest() {
-        return password_digest;
-    }
-
-    public void setPassword_digest(String password_digest) {
-        this.password_digest = password_digest;
     }
 
     @Override

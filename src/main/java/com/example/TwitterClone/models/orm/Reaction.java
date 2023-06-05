@@ -16,9 +16,14 @@ public class Reaction {
     @ManyToOne(fetch = FetchType.LAZY)
     Post post;
 
-    @JoinColumn(name = "user_id", nullable = false)
+//    @JoinColumn(name = "user_id", nullable = false)
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    ApplicationUser user;
+
+    @JsonBackReference(value = "User reactions")
     @ManyToOne(fetch = FetchType.LAZY)
-    ApplicationUser user;
+    @JoinColumn(name = "userId", insertable=false, updatable=false)
+    private ApplicationUser user;
 
     public void setId(Long id) {
         this.id = id;

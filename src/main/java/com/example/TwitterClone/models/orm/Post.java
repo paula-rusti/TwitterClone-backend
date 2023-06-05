@@ -35,12 +35,12 @@ public class Post {
     private Date created;
 
 
-    @JsonManagedReference(value = "postReactions")
+    @JsonManagedReference(value = "post reactions")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Reaction> postReactions;
 
-    @JsonManagedReference(value = "postReplies")
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JsonManagedReference(value = "post replies")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentPost", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Reply> postReplies;
 
     public Post(String content, Date created) {
