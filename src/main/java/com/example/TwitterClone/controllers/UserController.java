@@ -9,6 +9,7 @@ import com.example.TwitterClone.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -87,9 +88,10 @@ public class UserController {
     }
 
     @DeleteMapping("/{username}")
+    @Transactional
     public ResponseEntity<Void> deleteUser(@PathVariable String username) {
         // todo make sure we get notified when this fails -- by using deleted
-        Boolean deleted = userService.deleteUser(username);
+        Long deletedId = userService.deleteUser(username);
         return ResponseEntity.noContent().build();
     }
 }

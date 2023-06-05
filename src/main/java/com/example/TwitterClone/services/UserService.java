@@ -51,7 +51,7 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public Boolean deleteUser(String username) {
+    public Long deleteUser(String username) {
         return userRepository.deleteByUsername(username);
     }
 
