@@ -1,7 +1,6 @@
 
 package com.example.TwitterClone.models.orm;
 
-import com.example.TwitterClone.utils.StringListConverter;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -16,7 +15,6 @@ import java.util.List;
 @Table(name = "posts")
 @Getter
 @Setter
-@Converter(autoApply = true)
 public class Post {
     @Id
     @Column(name = "post_id")
@@ -54,15 +52,9 @@ public class Post {
 
     // valid list of existing usernames
     // when the post is added its content is checked for mentions with @username
-    // then this field is populated
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    @CollectionTable(name = "posts", joinColumns = @JoinColumn(name = "post_id"))
-//    @Column(name = "mentions", columnDefinition = "text[]", nullable = true)
-//    private List<String> mentions;
-
-    @Convert(converter = StringListConverter.class)
+    // then this field is populated as usernames separated by commas
     @Column(name = "mentions")
-    private List<String> mentions;
+    private String mentions;
 
     @ElementCollection
     @Column(name = "retweets", nullable = true)

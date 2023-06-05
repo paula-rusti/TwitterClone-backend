@@ -26,6 +26,5 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     @Query(value = "UPDATE your_entity SET retweets = array_append(retweets, :reposterUsername) WHERE id = :postId", nativeQuery = true)
     void updateRetweets(@Param("postId") Long postId, @Param("reposterUsername") String reposterUsername);
 
-    @Query("SELECT p FROM Post p WHERE :username MEMBER OF p.mentions")
-    List<Post> findPostsByUserMentioned(@Param("username") String username);
+    List<Post> findPostsByMentionsContaining(@Param("username") String username);
 }

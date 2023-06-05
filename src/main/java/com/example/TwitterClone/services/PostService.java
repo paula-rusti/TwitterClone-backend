@@ -45,7 +45,7 @@ public class PostService {
         this.userRepository = userRepository;
     }
 
-    private List<String> extractMentions(String content) {
+    private String extractMentions(String content) {
         String regex = "@([a-zA-Z0-9_]+)";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(content);
@@ -56,11 +56,11 @@ public class PostService {
             String username = matcher.group(1);
             mentions.add(username);
         }
-        return mentions;
+        return String.join(",", mentions);
     }
 
     public Post addPost(CreatePostRequest createPostRequest) {
-        List<String> mentions = extractMentions(createPostRequest.getContent());
+        String mentions = extractMentions(createPostRequest.getContent());
         createPostRequest.setMentions(mentions);
         return postRepository.save(postMapper.postRequestToEntity(createPostRequest));
     }
@@ -131,7 +131,7 @@ public class PostService {
 
     public List<PostResponse> getMentionsPosts(String username) {
         // retrieve all posts that mention the given user
-        List<Post> retrievedPosts = postRepository.findPostsByUserMentioned(username);
+        List<Post> retrievedPosts = postRepository.findPostsByMentionsContaining(username);
         return retrievedPosts.stream().map(postMapper::entityToPostResponse).toList();
     }
 }
